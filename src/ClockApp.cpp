@@ -15,7 +15,7 @@
 //Basic Clock App
 //class ClockApp : public CoreApp{
 
-    
+int16_t x_touch = 0, y_touch = 0;
 
 ClockApp::ClockApp(unsigned int _app_id, char *_name) : 
 isactive(true), 
@@ -39,11 +39,43 @@ void ClockApp::close_app(){
 
 void ClockApp::loop()
     {
-        if (this->targetTime < millis()) {
-            this->targetTime = millis() + 1000;
-            //this->display_time(); // Call every second but only update time every minute
-            this->update_time();
+        if (this->updates >= 1)
+        {
+            if (this->targetTime < millis()) {
+                this->targetTime = millis() + 1000;
+                if(updates == 1)
+                {
+                    TTGOClass::getWatch()->bl->on();
+		            TTGOClass::getWatch()->displayWakeup();
+                    this->display_time();  
+                }
+                else{
+                    this->update_time();
+                }
+                //this->display_time(); // Call every second but only update time every minute
+                (this->updates)++;
+
+                if(this->updates > 5)
+                {
+                    TTGOClass::getWatch()->displaySleep();
+		            TTGOClass::getWatch()->bl->off();
+                    this->updates = 0;
+                }
             }
+        }
+        else
+        {
+            /* wait for touch to turn backlit on*/
+            //sleep...
+
+            //TODO: external touch handle
+            if(TTGOClass::getWatch()->getTouch(x_touch, y_touch)){
+                this->updates = 1;
+                //TODO: haptics using DRV2605
+                //TTGOClass::getWatch()->motor->onec(150);
+            }
+
+        }
     };
 
 void ClockApp::display_time(){
@@ -55,37 +87,18 @@ void ClockApp::display_time(){
 
         RTC_Date tnow = TTGOClass::getWatch()->rtc->getDateTime();
 
-                if (this->sec != tnow.second) {
+        TTGOClass::getWatch()->tft->setTextColor(0xFBE0, TFT_BLACK); // Orange
 
-            this->hour = tnow.hour;
-            this->min = tnow.minute;
-            this->sec = tnow.second;
+        this->hour = tnow.hour;
+        this->draw_number(this->hour, 0, 90, 7);
+        TTGOClass::getWatch()->tft->drawChar(':', 64, 90, 7);
 
-            // Font 7 is a 7-seg display but only contains
-            // characters [space] 0 1 2 3 4 5 6 7 8 9 0 : .
+        this->min = tnow.minute;
+        this->draw_number(this->min, 76, 90, 7);
+        TTGOClass::getWatch()->tft->drawChar(':', 140, 90, 7);
 
-            //TTGOClass::getWatch()->tft->setTextColor(0x39C4, TFT_BLACK); // Set desired color
-            TTGOClass::getWatch()->tft->drawString("88:88", xpos, ypos, 7);
-            TTGOClass::getWatch()->tft->setTextColor(0xFBE0, TFT_BLACK); // Orange
-
-            if (this->hour < 10) xpos += TTGOClass::getWatch()->tft->drawChar('0', xpos, ypos, 7);
-            xpos += TTGOClass::getWatch()->tft->drawNumber(this->hour, xpos, ypos, 7);
-            xcolon = xpos + 3;
-            xpos += TTGOClass::getWatch()->tft->drawChar(':', xcolon, ypos, 7);
-            if (this->min < 10) xpos += TTGOClass::getWatch()->tft->drawChar('0', xpos, ypos, 7);
-            TTGOClass::getWatch()->tft->drawNumber(this->min, xpos, ypos, 7);
-        }
-
-
-        if (this->sec % 2) { // Toggle the colon every second
-            TTGOClass::getWatch()->tft->setTextColor(0x39C4, TFT_BLACK);
-            xpos += TTGOClass::getWatch()->tft->drawChar(':', xcolon, ypos, 7);
-            TTGOClass::getWatch()->tft->setTextColor(0xFBE0, TFT_BLACK);
-        //    Serial.println("colon on");
-        } else {
-            TTGOClass::getWatch()->tft->drawChar(':', xcolon, ypos, 7);
-        //    Serial.println("colon off");
-        }
+        this->sec = tnow.second;
+        this->draw_number(this->sec, 152, 90, 7);
 
     }
 
@@ -98,20 +111,30 @@ void ClockApp::update_time(){
 
 }
 
-
+void ClockApp::draw_number(unsigned int val, unsigned int xpos, unsigned int ypos, unsigned int fontsize){
+    int16_t sumX = 0;
+    if (val < 10){
+        sumX = TTGOClass::getWatch()->tft->drawNumber(0, xpos, ypos, fontsize);    
+    }
+    TTGOClass::getWatch()->tft->drawNumber(val, xpos + sumX, ypos, fontsize);
+}
 
 void ClockApp::update_hour(RTC_Date tnow){
     if (this->hour != tnow.hour) {
         this->hour = tnow.hour;
-        TTGOClass::getWatch()->tft->drawNumber(this->hour, 0, 90, 7);
+        //TTGOClass::getWatch()->tft->drawNumber(this->hour, 0, 90, 7);
+        this->draw_number(this->hour, 0, 90, 7);
         TTGOClass::getWatch()->tft->drawChar(':', 64, 90, 7);
     }
 }
 
+
+
 void ClockApp::update_min(RTC_Date tnow){
     if (this->min != tnow.minute) {
         this->min = tnow.minute;
-        TTGOClass::getWatch()->tft->drawNumber(this->min, 76, 90, 7);
+        //TTGOClass::getWatch()->tft->drawNumber(this->min, 76, 90, 7);
+        this->draw_number(this->min, 76, 90, 7);
         TTGOClass::getWatch()->tft->drawChar(':', 140, 90, 7);
     }
 }
@@ -119,13 +142,17 @@ void ClockApp::update_min(RTC_Date tnow){
 void ClockApp::update_sec(RTC_Date tnow){
     if (this->sec != tnow.second) {
         this->sec = tnow.second;
-        TTGOClass::getWatch()->tft->drawNumber(this->sec, 152, 90, 7);
+        //TTGOClass::getWatch()->tft->drawNumber(this->sec, 152, 90, 7);
+        this->draw_number(this->sec, 152, 90, 7);
     }
 }
 
 void ClockApp::background_loop(){
 
 };
+
+
+
 
 ClockApp *ClockApp::clockapp;
 
