@@ -6,7 +6,7 @@
 
 class ClockApp{
     public:
-    bool isactive = false;
+    bool isactive = true;
     unsigned int app_id = 0;
     char *name = nullptr;
 
