@@ -24,10 +24,6 @@ class ClockApp{
     unsigned int sec = 0;
     unsigned int targetTime = 0;
 
-    byte xpos = 40; // Stating position for the display
-    byte ypos = 90;
-    byte xcolon = 0;
-
     
 
     ClockApp(unsigned int _app_id, char *_name);

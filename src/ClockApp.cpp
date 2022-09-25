@@ -10,12 +10,12 @@
 #include <LilyGoWatch.h>
 #include <soc/rtc.h>
 
+#include "System.h"
+
 
 
 //Basic Clock App
 //class ClockApp : public CoreApp{
-
-int16_t x_touch = 0, y_touch = 0;
 
 ClockApp::ClockApp(unsigned int _app_id, char *_name) : 
 isactive(true), 
@@ -45,20 +45,17 @@ void ClockApp::loop()
                 this->targetTime = millis() + 1000;
                 if(updates == 1)
                 {
-                    TTGOClass::getWatch()->bl->on();
-		            TTGOClass::getWatch()->displayWakeup();
+                    DisplayHandle::getInstance()->turn_display_on();
                     this->display_time();  
                 }
                 else{
                     this->update_time();
                 }
-                //this->display_time(); // Call every second but only update time every minute
                 (this->updates)++;
 
                 if(this->updates > 5)
                 {
-                    TTGOClass::getWatch()->displaySleep();
-		            TTGOClass::getWatch()->bl->off();
+                    DisplayHandle::getInstance()->turn_display_off();
                     this->updates = 0;
                 }
             }
@@ -68,10 +65,10 @@ void ClockApp::loop()
             /* wait for touch to turn backlit on*/
             //sleep...
 
-            //TODO: external touch handle
-            if(TTGOClass::getWatch()->getTouch(x_touch, y_touch)){
+//TODO: external touch handle
+            if(TouchHandle::getInstance()->is_touched()){
                 this->updates = 1;
-                //TODO: haptics using DRV2605
+//TODO: haptics using DRV2605
                 //TTGOClass::getWatch()->motor->onec(150);
             }
 
@@ -79,9 +76,6 @@ void ClockApp::loop()
     };
 
 void ClockApp::display_time(){
-
-        this->xpos = 40; // Stating position for the display
-        this->ypos = 90;
         
         TTGOClass::getWatch()->tft->setTextSize(1);
 
@@ -122,7 +116,6 @@ void ClockApp::draw_number(unsigned int val, unsigned int xpos, unsigned int ypo
 void ClockApp::update_hour(RTC_Date tnow){
     if (this->hour != tnow.hour) {
         this->hour = tnow.hour;
-        //TTGOClass::getWatch()->tft->drawNumber(this->hour, 0, 90, 7);
         this->draw_number(this->hour, 0, 90, 7);
         TTGOClass::getWatch()->tft->drawChar(':', 64, 90, 7);
     }
@@ -133,7 +126,6 @@ void ClockApp::update_hour(RTC_Date tnow){
 void ClockApp::update_min(RTC_Date tnow){
     if (this->min != tnow.minute) {
         this->min = tnow.minute;
-        //TTGOClass::getWatch()->tft->drawNumber(this->min, 76, 90, 7);
         this->draw_number(this->min, 76, 90, 7);
         TTGOClass::getWatch()->tft->drawChar(':', 140, 90, 7);
     }
@@ -142,7 +134,6 @@ void ClockApp::update_min(RTC_Date tnow){
 void ClockApp::update_sec(RTC_Date tnow){
     if (this->sec != tnow.second) {
         this->sec = tnow.second;
-        //TTGOClass::getWatch()->tft->drawNumber(this->sec, 152, 90, 7);
         this->draw_number(this->sec, 152, 90, 7);
     }
 }

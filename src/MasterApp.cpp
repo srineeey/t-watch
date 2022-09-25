@@ -7,7 +7,7 @@
 #include <soc/rtc.h>
 
 //TODO: handles for watch system
-//#include "System.h"
+#include "System.h"
 
 #include "MasterApp.h"
 
@@ -26,28 +26,31 @@ name(_name)
 {
     //initialize watch
 
-//TODO: startup function
-
+//TODO: startup shutdown restart functions
     //ttgo = TTGOClass::getWatch();
     TTGOClass::getWatch()->begin();
 
-//TODO: system handle (app?) for sensor readings
+//TODO: system handle (apps?) for sensor readings
+
+//TODO: function for handle initialization
+    //initialize handles
+    TouchHandle::createInstance();
+    DisplayHandle::createInstance()->turn_display_on();
+
+//TODO: timehandle
     //Synchronize time to system time
     TTGOClass::getWatch()->rtc->syncToSystem();
 
     //Check if the RTC clock matches, if not, use compile time
     TTGOClass::getWatch()->rtc->check();
 
-    
     //get sensor readings
     RTC_Date tnow = TTGOClass::getWatch()->rtc->getDateTime();
 
     //Initialize lvgl
     TTGOClass::getWatch()->lvgl_begin();
 
-    // Turn on the backlight
-    TTGOClass::getWatch()->openBL();
-
+//TODO: app startup functionality (list of apps, function)
     //initialize startup apps
     // Start ClockApp
     char clockname[] = "clock";
@@ -58,7 +61,7 @@ name(_name)
 
 void MasterApp::loop()
 {
-//TODO: app (loop) management
+//TODO: app/handle (loop) management (synchronous?)
     char clockname[] = "clock";
 
     if(ClockApp::getInstance(0, clockname)->isactive){
