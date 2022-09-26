@@ -16,6 +16,16 @@ bool TouchHandle::is_touched(){
     return this->touched;
 }
 
+int16_t TouchHandle::get_x_touch(){
+    //TODO: check xvalue!
+    return this->x_touch;
+};
+
+int16_t TouchHandle::get_y_touch(){
+    //TODO: check xvalue!
+    return this->y_touch;
+};
+
 
 TouchHandle *TouchHandle::touchhandle;
 
@@ -29,6 +39,9 @@ TouchHandle *TouchHandle::createInstance() {
 TouchHandle *TouchHandle::getInstance() {
     return TouchHandle::touchhandle;
 }
+
+
+
 
 
 void DisplayHandle::turn_display_on(){
@@ -61,4 +74,31 @@ DisplayHandle *DisplayHandle::createInstance() {
 
 DisplayHandle *DisplayHandle::getInstance() {
     return DisplayHandle::displayhandle;
+}
+
+
+
+
+
+
+
+uint8_t PowerHandle::get_capacity(){
+//TODO: check formula
+    int _capacity = (int)(TTGOClass::getWatch()->power->getBattVoltage() - 30) * 100 / 4170;
+    _capacity = std::max(_capacity, 0);
+    this->capacity = std::min(_capacity, 100);
+    return this->capacity;
+}
+
+PowerHandle *PowerHandle::powerhandle;
+
+PowerHandle *PowerHandle::createInstance() {
+    if (PowerHandle::powerhandle == nullptr) {
+        PowerHandle::powerhandle = new PowerHandle();
+    }
+    return PowerHandle::powerhandle;
+}
+
+PowerHandle *PowerHandle::getInstance() {
+    return PowerHandle::powerhandle;
 }

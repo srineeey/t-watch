@@ -36,6 +36,7 @@ name(_name)
     //initialize handles
     TouchHandle::createInstance();
     DisplayHandle::createInstance()->turn_display_on();
+    PowerHandle::createInstance();
 
 //TODO: timehandle
     //Synchronize time to system time

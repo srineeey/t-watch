@@ -27,7 +27,7 @@ name(_name)
 
 void ClockApp::open_app(){
     TTGOClass::getWatch()->tft->setTextFont(1);
-    TTGOClass::getWatch()->tft->setTextSize(1);
+    //TTGOClass::getWatch()->tft->setTextSize(1);
     TTGOClass::getWatch()->tft->fillScreen(TFT_BLACK);
     TTGOClass::getWatch()->tft->setTextColor(TFT_YELLOW, TFT_BLACK); // Note: the new fonts do not draw the background colour
     this->loop();
@@ -46,7 +46,8 @@ void ClockApp::loop()
                 if(updates == 1)
                 {
                     DisplayHandle::getInstance()->turn_display_on();
-                    this->display_time();  
+                    this->display_time();
+                    this->update_capacity();
                 }
                 else{
                     this->update_time();
@@ -77,7 +78,7 @@ void ClockApp::loop()
 
 void ClockApp::display_time(){
         
-        TTGOClass::getWatch()->tft->setTextSize(1);
+        //TTGOClass::getWatch()->tft->setTextSize(1);
 
         RTC_Date tnow = TTGOClass::getWatch()->rtc->getDateTime();
 
@@ -94,6 +95,15 @@ void ClockApp::display_time(){
         this->sec = tnow.second;
         this->draw_number(this->sec, 152, 90, 7);
 
+    }
+
+void ClockApp::update_capacity(){
+    uint8_t new_capacity = PowerHandle::getInstance()->get_capacity();
+    if(this->capacity != new_capacity){
+        this->capacity = new_capacity;
+        int _width = TTGOClass::getWatch()->tft->drawNumber(this->capacity, 0, 0, 1);    
+        TTGOClass::getWatch()->tft->drawChar('%', _width, 0, 1);
+    }
     }
 
 void ClockApp::update_time(){

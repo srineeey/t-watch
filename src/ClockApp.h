@@ -23,6 +23,7 @@ class ClockApp{
     unsigned int min = 0;
     unsigned int sec = 0;
     unsigned int targetTime = 0;
+    uint8_t capacity = 200;
 
     
 
@@ -35,6 +36,8 @@ class ClockApp{
     void display_time();
 
     void update_time();
+
+    void update_capacity();
 
     void draw_number(unsigned int val, unsigned int xpos, unsigned int ypos, unsigned int fontsize);
 

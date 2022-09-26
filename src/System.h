@@ -23,6 +23,8 @@ class TouchHandle{
 
     public:
     bool is_touched();
+    int16_t get_x_touch();
+    int16_t get_y_touch();
 };
 
 
@@ -41,4 +43,19 @@ class DisplayHandle{
     public:
     void turn_display_on();
     void turn_display_off();
+};
+
+
+class PowerHandle{
+    uint8_t capacity = 200;
+
+    public:
+    static PowerHandle *createInstance();
+    static PowerHandle *getInstance();
+
+    protected:
+    static PowerHandle *powerhandle;
+
+    public:
+    uint8_t get_capacity();
 };
