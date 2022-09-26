@@ -46,8 +46,10 @@ void ClockApp::loop()
                 if(updates == 1)
                 {
                     DisplayHandle::getInstance()->turn_display_on();
+//TODO: update callbacks?
                     this->display_time();
                     this->update_capacity();
+                    this->update_date();
                 }
                 else{
                     this->update_time();
@@ -99,12 +101,27 @@ void ClockApp::display_time(){
 
 void ClockApp::update_capacity(){
     uint8_t new_capacity = PowerHandle::getInstance()->get_capacity();
-    if(this->capacity != new_capacity){
-        this->capacity = new_capacity;
-        int _width = TTGOClass::getWatch()->tft->drawNumber(this->capacity, 0, 0, 1);    
-        TTGOClass::getWatch()->tft->drawChar('%', _width, 0, 1);
+        if(this->capacity != new_capacity){
+            this->capacity = new_capacity;
+            int _width = TTGOClass::getWatch()->tft->drawNumber(this->capacity, 215, 0, 1);    
+            TTGOClass::getWatch()->tft->drawChar('%', 215+_width, 0, 1);
+        }
     }
+
+void ClockApp::update_date(){
+    RTC_Date tnow = TTGOClass::getWatch()->rtc->getDateTime();
+    if(this->day != tnow.day){
+        this->day = tnow.day;
+        this->month = tnow.month;
+        this->year = tnow.year;
+
+        char date_str[10];
+
+        sprintf(date_str, "%d/%d/%d", this->day, this->month, this->year);
+
+        TTGOClass::getWatch()->tft->drawString(date_str, 0, 0);
     }
+}
 
 void ClockApp::update_time(){
     RTC_Date tnow = TTGOClass::getWatch()->rtc->getDateTime();

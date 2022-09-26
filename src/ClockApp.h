@@ -22,6 +22,11 @@ class ClockApp{
     unsigned int hour = 0;
     unsigned int min = 0;
     unsigned int sec = 0;
+
+    uint8_t day = 0;
+    uint8_t month = 0;
+    uint16_t year = 0;
+
     unsigned int targetTime = 0;
     uint8_t capacity = 200;
 
@@ -38,6 +43,8 @@ class ClockApp{
     void update_time();
 
     void update_capacity();
+
+    void update_date();
 
     void draw_number(unsigned int val, unsigned int xpos, unsigned int ypos, unsigned int fontsize);
 
