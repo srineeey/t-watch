@@ -59,3 +59,20 @@ class PowerHandle{
     public:
     uint8_t get_capacity();
 };
+
+
+class MotorHandle{
+    bool motor_is_on = false;
+
+    public:
+    static MotorHandle *createInstance();
+    static MotorHandle *getInstance();
+    MotorHandle();
+
+    protected:
+    static  MotorHandle *motorhandle;
+
+    public:
+    void vibrate();
+
+};

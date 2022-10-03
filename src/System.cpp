@@ -9,7 +9,7 @@
 #include "System.h"
 
 //TODO: multiple threads for system handles and apps
-//TODO: templates for handles and apps
+//TODO: templates (inheritance!) for handles and apps
 
 bool TouchHandle::is_touched(){
     this->touched = TTGOClass::getWatch()->getTouch(this->x_touch, this->y_touch);
@@ -101,4 +101,34 @@ PowerHandle *PowerHandle::createInstance() {
 
 PowerHandle *PowerHandle::getInstance() {
     return PowerHandle::powerhandle;
+}
+
+
+
+
+MotorHandle::MotorHandle(){
+    TTGOClass::getWatch()->enableDrv2650();
+    TTGOClass::getWatch()->drv->selectLibrary(1);
+    TTGOClass::getWatch()->drv->setMode(DRV2605_MODE_INTTRIG);
+}
+
+void MotorHandle::vibrate(){
+    uint8_t effect = 8; //soft bump
+    TTGOClass::getWatch()->drv->setWaveform(0, effect); // play effect
+    TTGOClass::getWatch()->drv->setWaveform(1, 0);      // end waveform
+    TTGOClass::getWatch()->drv->go();                   // play the effect!
+}
+
+
+MotorHandle *MotorHandle::motorhandle;
+
+MotorHandle *MotorHandle::createInstance() {
+    if (MotorHandle::motorhandle == nullptr) {
+        MotorHandle::motorhandle = new MotorHandle();
+    }
+    return MotorHandle::motorhandle;
+}
+
+MotorHandle *MotorHandle::getInstance() {
+    return MotorHandle::motorhandle;
 }

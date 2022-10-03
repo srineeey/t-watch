@@ -145,6 +145,7 @@ void ClockApp::update_hour(RTC_Date tnow){
         this->hour = tnow.hour;
         this->draw_number(this->hour, 0, 90, 7);
         TTGOClass::getWatch()->tft->drawChar(':', 64, 90, 7);
+        MotorHandle::getInstance()->vibrate();
     }
 }
 

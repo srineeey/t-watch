@@ -37,17 +37,16 @@ name(_name)
     TouchHandle::createInstance();
     DisplayHandle::createInstance()->turn_display_on();
     PowerHandle::createInstance();
+    MotorHandle::createInstance();
 
-//TODO: timehandle
+//TODO: move to timehandle
     //Synchronize time to system time
     TTGOClass::getWatch()->rtc->syncToSystem();
-
     //Check if the RTC clock matches, if not, use compile time
     TTGOClass::getWatch()->rtc->check();
-
-    //get sensor readings
     RTC_Date tnow = TTGOClass::getWatch()->rtc->getDateTime();
 
+//TODO: move to display/gui handle
     //Initialize lvgl
     TTGOClass::getWatch()->lvgl_begin();
 
