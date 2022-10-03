@@ -73,6 +73,6 @@ class MotorHandle{
     static  MotorHandle *motorhandle;
 
     public:
-    void vibrate();
+    void vibrate(uint8_t effect = 1);
 
 };

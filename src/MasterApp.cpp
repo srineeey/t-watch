@@ -67,6 +67,9 @@ void MasterApp::loop()
     if(ClockApp::getInstance(0, clockname)->isactive){
         ClockApp::getInstance(0, clockname)->loop();
     }
+    else{
+        ClockApp::getInstance(0, clockname)->background_loop();
+    }
     
 }
 

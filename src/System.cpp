@@ -112,8 +112,8 @@ MotorHandle::MotorHandle(){
     TTGOClass::getWatch()->drv->setMode(DRV2605_MODE_INTTRIG);
 }
 
-void MotorHandle::vibrate(){
-    uint8_t effect = 8; //soft bump
+void MotorHandle::vibrate(uint8_t effect){
+    //1 = hard bump
     TTGOClass::getWatch()->drv->setWaveform(0, effect); // play effect
     TTGOClass::getWatch()->drv->setWaveform(1, 0);      // end waveform
     TTGOClass::getWatch()->drv->go();                   // play the effect!

@@ -69,8 +69,11 @@ void ClockApp::loop()
             /* wait for touch to turn backlit on*/
             //sleep...
 
+            background_loop();
+
 //TODO: external touch handle
             if(TouchHandle::getInstance()->is_touched()){
+                MotorHandle::getInstance()->vibrate(17);
                 this->updates = 1;
 //TODO: haptics using DRV2605
                 //TTGOClass::getWatch()->motor->onec(150);
@@ -164,11 +167,18 @@ void ClockApp::update_sec(RTC_Date tnow){
     if (this->sec != tnow.second) {
         this->sec = tnow.second;
         this->draw_number(this->sec, 152, 90, 7);
+        MotorHandle::getInstance()->vibrate(24);
     }
 }
 
+//TODO: Optimize background loop
 void ClockApp::background_loop(){
-
+    //delay(uint32_t ms);
+    RTC_Date tnow = TTGOClass::getWatch()->rtc->getDateTime();
+    if (this->hour != tnow.hour) {
+    //if (this->sec != tnow.second) {
+        MotorHandle::getInstance()->vibrate(15);
+    }
 };
 
 
