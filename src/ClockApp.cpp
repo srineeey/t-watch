@@ -23,6 +23,7 @@ app_id(_app_id),
 name(_name)
 {
     Serial.println("ClockApp started");
+    DisplayHandle::getInstance()->turn_display_on();
 };
 
 void ClockApp::open_app(){
