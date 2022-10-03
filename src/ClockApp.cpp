@@ -175,8 +175,14 @@ void ClockApp::update_sec(RTC_Date tnow){
 void ClockApp::background_loop(){
     //delay(uint32_t ms);
     RTC_Date tnow = TTGOClass::getWatch()->rtc->getDateTime();
-    if (this->hour != tnow.hour) {
+    if ((tnow.minute == 0) && this->min != tnow.minute) {
     //if (this->sec != tnow.second) {
+        this->min = tnow.minute;
+        MotorHandle::getInstance()->vibrate(16);
+    }
+    else if ((tnow.minute % 15 == 0 ) && this->min != tnow.minute) {
+    //if (this->sec != tnow.second) {
+        this->min = tnow.minute;
         MotorHandle::getInstance()->vibrate(15);
     }
 };
