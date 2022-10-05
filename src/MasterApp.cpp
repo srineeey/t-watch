@@ -38,6 +38,7 @@ name(_name)
     DisplayHandle::createInstance()->turn_display_on();
     PowerHandle::createInstance();
     MotorHandle::createInstance();
+    RadioHandle::createInstance();
 
 //TODO: move to timehandle
     //Synchronize time to system time
@@ -49,6 +50,11 @@ name(_name)
 //TODO: move to display/gui handle
     //Initialize lvgl
     TTGOClass::getWatch()->lvgl_begin();
+
+//TODO: where to move startup?
+    RadioHandle::getInstance()->turn_wifi_on(false);
+    (RadioHandle::getInstance())->wifi_connect();
+    Serial.println("WiFi connected: " + (String)((RadioHandle::getInstance())->wifi_connect()));
 
 //TODO: app startup functionality (list of apps, function)
     //initialize startup apps

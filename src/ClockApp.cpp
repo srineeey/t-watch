@@ -51,6 +51,9 @@ void ClockApp::loop()
                     this->display_time();
                     this->update_capacity();
                     this->update_date();
+                    if (RadioHandle::getInstance()->wifi_is_connected){
+                        TTGOClass::getWatch()->tft->drawString("WiFi", 215, 230, 1);
+                    }
                 }
                 else{
                     this->update_time();
@@ -172,6 +175,7 @@ void ClockApp::update_sec(RTC_Date tnow){
 }
 
 //TODO: Optimize background loop
+//TODO: run loop and background loop potentially in parallel
 void ClockApp::background_loop(){
     //delay(uint32_t ms);
     RTC_Date tnow = TTGOClass::getWatch()->rtc->getDateTime();

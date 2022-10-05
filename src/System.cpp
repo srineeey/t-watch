@@ -132,3 +132,112 @@ MotorHandle *MotorHandle::createInstance() {
 MotorHandle *MotorHandle::getInstance() {
     return MotorHandle::motorhandle;
 }
+
+
+
+
+
+
+
+
+
+String translateEncryptionType(wifi_auth_mode_t encryptionType) {
+ 
+  switch (encryptionType) {
+    case (WIFI_AUTH_OPEN):
+      return "Open";
+    case (WIFI_AUTH_WEP):
+      return "WEP";
+    case (WIFI_AUTH_WPA_PSK):
+      return "WPA_PSK";
+    case (WIFI_AUTH_WPA2_PSK):
+      return "WPA2_PSK";
+    case (WIFI_AUTH_WPA_WPA2_PSK):
+      return "WPA_WPA2_PSK";
+    case (WIFI_AUTH_WPA2_ENTERPRISE):
+      return "WPA2_ENTERPRISE";
+  }
+  return "UNKNOWN";
+}
+
+
+
+
+
+void RadioHandle::turn_wifi_on(bool scan){
+    this->turn_wifi_off();
+	WiFi.mode(WIFI_MODE_STA);
+    if(scan) this->wifi_scan();
+}
+
+void RadioHandle::turn_wifi_off(){
+    WiFi.disconnect(true);	
+	WiFi.mode(WIFI_OFF);
+}
+
+void RadioHandle::wifi_scan(){
+    int number_nets = WiFi.scanNetworks();
+    int i_net_to_connect = 0;
+
+    for(; i_net_to_connect < number_nets; i_net_to_connect++){
+        if(WiFi.SSID(i_net_to_connect) == this->ssid){
+            break;
+        }
+    }
+
+    Serial.print("Network name: ");
+    Serial.println(WiFi.SSID(i_net_to_connect));
+ 
+    Serial.print("Signal strength: ");
+    Serial.println(WiFi.RSSI(i_net_to_connect));
+ 
+    Serial.print("MAC address: ");
+    Serial.println(WiFi.BSSIDstr(i_net_to_connect));
+ 
+    Serial.print("Encryption type: ");
+    String encryptionTypeDescription = translateEncryptionType(WiFi.encryptionType(i_net_to_connect));
+}
+
+
+bool RadioHandle::wifi_connect(String ssid, String password){
+    
+    WiFi.begin(ssid.c_str(), password.c_str());
+    int n_delays = 0;
+    while ( (WiFi.status() != WL_CONNECTED) || (n_delays >= 20)) {
+        delay(1000);
+        n_delays++;
+        Serial.println("Establishing connection to WiFi..");
+    }
+
+    return (bool)(n_delays < 20);
+}
+
+bool RadioHandle::wifi_connect(){
+    
+    WiFi.begin(this->ssid, this->password);
+    int n_delays = 0;
+    while ( (WiFi.status() != WL_CONNECTED) || (n_delays >= 20)) {
+        delay(1000);
+        n_delays++;
+        Serial.println("Establishing connection to WiFi..");
+    }
+    this->wifi_is_connected = (bool)(n_delays < 20);
+    return this->wifi_is_connected;
+}
+
+
+
+
+
+RadioHandle *RadioHandle::radiohandle;
+
+RadioHandle *RadioHandle::createInstance() {
+    if (RadioHandle::radiohandle == nullptr) {
+        RadioHandle::radiohandle = new RadioHandle();
+    }
+    return RadioHandle::radiohandle;
+}
+
+RadioHandle *RadioHandle::getInstance() {
+    return RadioHandle::radiohandle;
+}
