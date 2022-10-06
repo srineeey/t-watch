@@ -42,17 +42,21 @@ void ClockApp::loop()
     {
         if (this->updates >= 1)
         {
+            DisplayHandle::getInstance()->turn_display_on();
             if (this->targetTime < millis()) {
                 this->targetTime = millis() + 1000;
                 if(updates == 1)
                 {
-                    DisplayHandle::getInstance()->turn_display_on();
+                    //DisplayHandle::getInstance()->turn_display_on();
 //TODO: update callbacks?
                     this->display_time();
                     this->update_capacity();
                     this->update_date();
-                    if (RadioHandle::getInstance()->wifi_is_connected){
+                    if (RadioHandle::getInstance()->wifi_is_connected()){
                         TTGOClass::getWatch()->tft->drawString("WiFi", 215, 230, 1);
+                    }
+                    else{
+                        TTGOClass::getWatch()->tft->drawString("No WiFi", 195, 230, 1);
                     }
                 }
                 else{

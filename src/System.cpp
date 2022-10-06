@@ -212,17 +212,20 @@ bool RadioHandle::wifi_connect(String ssid, String password){
     return (bool)(n_delays < 20);
 }
 
+bool RadioHandle::wifi_is_connected(){
+    return (bool)(WiFi.status() == WL_CONNECTED);
+}
+
 bool RadioHandle::wifi_connect(){
     
     WiFi.begin(this->ssid, this->password);
     int n_delays = 0;
-    while ( (WiFi.status() != WL_CONNECTED) || (n_delays >= 20)) {
+    while ( (WiFi.status() != WL_CONNECTED) || (n_delays >= 5)) {
         delay(1000);
         n_delays++;
         Serial.println("Establishing connection to WiFi..");
     }
-    this->wifi_is_connected = (bool)(n_delays < 20);
-    return this->wifi_is_connected;
+    return this->wifi_is_connected();
 }
 
 

@@ -56,6 +56,8 @@ name(_name)
     (RadioHandle::getInstance())->wifi_connect();
     Serial.println("WiFi connected: " + (String)((RadioHandle::getInstance())->wifi_connect()));
 
+    DisplayHandle::getInstance()->turn_display_on();
+
 //TODO: app startup functionality (list of apps, function)
     //initialize startup apps
     // Start ClockApp

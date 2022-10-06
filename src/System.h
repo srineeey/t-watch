@@ -81,9 +81,7 @@ class MotorHandle{
 class RadioHandle{
     public:
     bool ble_is_on = false;
-    bool ble_is_connected = false;
     bool wifi_is_on = false;
-    bool wifi_is_connected = false;
     
     private:
     const char *ssid = "Jarvis";
@@ -108,5 +106,6 @@ class RadioHandle{
     void wifi_scan();
     bool wifi_connect(String ssid, String password);
     bool wifi_connect();
+    bool wifi_is_connected();
 
 };
