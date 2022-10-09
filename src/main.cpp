@@ -17,7 +17,8 @@ char mastername[] = "masterapp";
 void setup() {
   // put your setup code here, to run once:
 
-  Serial.begin(9600);
+//TODO:Serial messages not working
+  //Serial.begin(9600);
   
   MasterApp::getInstance(0, mastername);
 }

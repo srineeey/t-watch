@@ -6,6 +6,7 @@
 #include <LilyGoWatch.h>
 #include <soc/rtc.h>
 #include <WiFi.h>
+#include <BluetoothSerial.h>
 
 //TODO: multiple threads for system handles and apps
 
@@ -80,7 +81,7 @@ class MotorHandle{
 
 class RadioHandle{
     public:
-    bool ble_is_on = false;
+    bool ble_is_connected = false;
     bool wifi_is_on = false;
     
     private:
@@ -88,6 +89,7 @@ class RadioHandle{
     const char *password = "sweetWiFimakiroll2020";
     IPAddress ip = WiFi.localIP();
     String mac = WiFi.macAddress();
+    BluetoothSerial serial_bt;
 
 
     public:
@@ -100,6 +102,9 @@ class RadioHandle{
     public:
     void turn_ble_off();
     void turn_ble_on();
+
+//TODO: is static enough or global wrapper necessary?
+    static void serial_bt_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param);
 
     void turn_wifi_off();
     void turn_wifi_on(bool scan = false);

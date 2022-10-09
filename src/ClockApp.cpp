@@ -58,6 +58,12 @@ void ClockApp::loop()
                     else{
                         TTGOClass::getWatch()->tft->drawString("No WiFi", 195, 230, 1);
                     }
+                    if (RadioHandle::getInstance()->ble_is_connected){
+                        TTGOClass::getWatch()->tft->drawString("BLE", 0, 230, 1);
+                    }
+                    else{
+                        TTGOClass::getWatch()->tft->drawString("No BLE", 0, 230, 1);
+                    }
                 }
                 else{
                     this->update_time();

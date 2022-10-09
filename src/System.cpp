@@ -228,8 +228,30 @@ bool RadioHandle::wifi_connect(){
     return this->wifi_is_connected();
 }
 
+void (*callback_ptr)(esp_spp_cb_event_t event, esp_spp_cb_param_t *param) = (RadioHandle::serial_bt_callback);
+
+void RadioHandle::turn_ble_on(){
+    this->serial_bt.begin("t-watch");
+    this->serial_bt.register_callback(callback_ptr);
+}
+
+void RadioHandle::turn_ble_off(){
+    this->serial_bt.end();
+}
 
 
+void RadioHandle::serial_bt_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param){
+    Serial.println("callback at event ");
+    Serial.println(event);
+    if (event == ESP_SPP_SRV_OPEN_EVT){
+        Serial.println("BLE connected");
+        RadioHandle::getInstance()->ble_is_connected = true;
+    }
+    else if (event == ESP_SPP_SRV_STOP_EVT){
+        Serial.println("BLE disconnected");
+        RadioHandle::getInstance()->ble_is_connected = false;
+    }
+}
 
 
 RadioHandle *RadioHandle::radiohandle;
