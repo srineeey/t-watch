@@ -42,12 +42,20 @@ TouchHandle *TouchHandle::getInstance() {
 
 
 
+DisplayHandle::DisplayHandle(): display_is_on(false)
+{
+    //TTGOClass::getWatch()->lvgl_begin();
+}
 
+
+//TODO: review display on off functions
 
 void DisplayHandle::turn_display_on(){
     if(DisplayHandle::display_is_on == false)
     {
+        //TTGOClass::getWatch()->openBL();
         TTGOClass::getWatch()->bl->on();
+        //TTGOClass::getWatch()->startLvglTick();
         TTGOClass::getWatch()->displayWakeup();
         DisplayHandle::display_is_on = true;
     }
@@ -57,8 +65,10 @@ void DisplayHandle::turn_display_on(){
 void DisplayHandle::turn_display_off(){
     if(DisplayHandle::display_is_on == true)
     {
-        TTGOClass::getWatch()->displaySleep();
+        //TTGOClass::getWatch()->closeBL();
+	TTGOClass::getWatch()->displaySleep();
         TTGOClass::getWatch()->bl->off();
+        //TTGOClass::getWatch()->stopLvglTick();
         DisplayHandle::display_is_on = false;
     }
 }

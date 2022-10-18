@@ -38,6 +38,7 @@ class DisplayHandle{
     public:
     static DisplayHandle *createInstance();
     static DisplayHandle *getInstance();
+    DisplayHandle();
 
     protected:
     static DisplayHandle *displayhandle;
